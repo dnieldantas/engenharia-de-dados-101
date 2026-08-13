@@ -62,9 +62,6 @@ def ler_vendas_csv() -> list[dict]:
 
     return vendas
 
-    # TODO: implemente a leitura do arquivo lakehouse/landing/vendas.csv
-    raise NotImplementedError("Implemente ler_vendas_csv()")
-
 
 def ler_clientes_json() -> list[dict]:
     """
@@ -79,9 +76,6 @@ def ler_clientes_json() -> list[dict]:
     with open(LANDING / "clientes.json", "r", encoding="utf-8") as arquivo:
         clientes = json.load(arquivo)
     return clientes
-
-    # TODO: implemente a leitura do arquivo lakehouse/landing/clientes.json
-    raise NotImplementedError("Implemente ler_clientes_json()")
 
 
 def ler_produtos_txt() -> list[dict]:
@@ -129,9 +123,6 @@ def ler_produtos_txt() -> list[dict]:
             produtos.append(produto)
 
     return produtos
-            
-    # TODO: implemente a leitura do arquivo lakehouse/landing/produtos.txt
-    raise NotImplementedError("Implemente ler_produtos_txt()")
 
 
 def adicionar_metadados(registros: list[dict], nome_arquivo: str) -> list[dict]:

@@ -105,9 +105,6 @@ def limpar_clientes(bronze: list[dict]) -> list[dict]:
 
     return list(clientes.values())
 
-    # TODO: implemente a limpeza de clientes
-    raise NotImplementedError("Implemente limpar_clientes()")
-
 
 def limpar_produtos(bronze: list[dict]) -> list[dict]:
     """
@@ -139,9 +136,6 @@ def limpar_produtos(bronze: list[dict]) -> list[dict]:
             produtos[id_produto] = produto
 
     return list(produtos.values())
-        
-    # TODO: implemente a limpeza de produtos
-    raise NotImplementedError("Implemente limpar_produtos()")
 
 
 def limpar_vendas(bronze: list[dict], ids_clientes_validos: set[int], ids_produtos_validos: set[int]) -> list[dict]:
@@ -190,9 +184,6 @@ def limpar_vendas(bronze: list[dict], ids_clientes_validos: set[int], ids_produt
 
     return list(vendas.values())
 
-
-    # TODO: implemente a limpeza de vendas
-    raise NotImplementedError("Implemente limpar_vendas()")
 
 
 def main() -> None:
