@@ -68,24 +68,105 @@ def salvar_csv(registros: list[dict], caminho_saida: Path, colunas: list[str]) -
 
 def calcular_resumo_por_categoria(vendas: list[dict], produtos: list[dict]) -> list[dict]:
     """Uma linha por categoria: quantidade_vendida e valor_total somados."""
+    categorias = {}
+    produtos_por_id = {}
+
+    for produto in produtos:
+        id_produto = int(produto["id_produto"])
+        produtos_por_id[id_produto] = produto
+    
+    for venda in vendas:
+        id_produto = int(venda["id_produto"])
+        categoria = produtos_por_id[id_produto]["categoria"]
+
+        if categoria not in categorias:
+            categorias[categoria] = {
+                "categoria": categoria,
+                "quantidade_vendida": 0,
+                "valor_total": 0.0
+            }
+        categorias[categoria]["valor_total"] += float(venda["valor_total"])
+        categorias[categoria]["quantidade_vendida"] += int(venda["quantidade"])
+
+    return list(categorias.values())
+
+
     # TODO: implemente
     raise NotImplementedError("Implemente calcular_resumo_por_categoria()")
 
 
 def calcular_vendas_por_mes(vendas: list[dict]) -> list[dict]:
     """Uma linha por mês (AAAA-MM): quantidade_vendas e valor_total somados."""
+    meses = {}
+
+    for venda in vendas:
+        mes = venda["data_venda"][:7]
+        if mes not in meses:
+            meses[mes] = {
+                "mes": mes,
+                "quantidade_vendas": 0,
+                "valor_total": 0.0
+            }
+        
+        meses[mes]["quantidade_vendas"] += 1
+        meses[mes]["valor_total"] += float(venda["valor_total"])
+
+    return list(meses.values())
+
     # TODO: implemente
     raise NotImplementedError("Implemente calcular_vendas_por_mes()")
 
 
 def calcular_top_clientes(vendas: list[dict], clientes: list[dict], top_n: int = 10) -> list[dict]:
     """Os top_n clientes que mais gastaram, ordenados do maior para o menor."""
+    top_clientes = {}
+    clientes_por_id = {}
+
+    for cliente in clientes:
+        id_cliente = int(cliente["id_cliente"])
+        clientes_por_id[id_cliente] = cliente
+    
+    for venda in vendas:
+        id_cliente = int(venda["id_cliente"])
+        nome = clientes_por_id[id_cliente]["nome"]
+
+        if id_cliente not in top_clientes:
+            top_clientes[id_cliente] = {
+                "id_cliente": id_cliente,
+                "nome": nome,
+                "valor_total": 0.0
+            }
+        top_clientes[id_cliente]["valor_total"] += float(venda["valor_total"])
+
+    top_clientes = list(top_clientes.values())
+    top_clientes.sort(key=lambda cliente: cliente["valor_total"], reverse=True)
+
+    return top_clientes[:top_n]
+
     # TODO: implemente
     raise NotImplementedError("Implemente calcular_top_clientes()")
 
 
 def calcular_resumo_geral(vendas: list[dict]) -> list[dict]:
     """Uma única linha: total_vendas, valor_total_geral, ticket_medio."""
+
+    total_vendas = len(vendas)
+    valor_total_geral = 0.0
+
+    for venda in vendas:
+        valor_total_geral += float(venda["valor_total"])
+
+    if total_vendas > 0:
+        ticket_medio = round(valor_total_geral / total_vendas, 2)
+    else:
+        ticket_medio = 0.0
+
+    return [{
+        "total_vendas": total_vendas,
+        "valor_total_geral": valor_total_geral,
+        "ticket_medio": ticket_medio
+    }]
+
     # TODO: implemente
     raise NotImplementedError("Implemente calcular_resumo_geral()")
 
