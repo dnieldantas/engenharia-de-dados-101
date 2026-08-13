@@ -73,8 +73,11 @@ def criar_tabela(conexao: sqlite3.Connection, nome_tabela: str, colunas: list[st
     colunas podem ser inseridos direto na string do SQL (não dá pra usar
     parâmetro `?` para nomes de coluna, só para valores).
     """
-    # TODO: implemente a criação da tabela
-    raise NotImplementedError("Implemente criar_tabela()")
+    conexao.execute(f"DROP TABLE IF EXISTS {nome_tabela}")
+
+    colunas_sql = ", ".join(colunas)
+
+    conexao.execute(f"CREATE TABLE {nome_tabela} ({colunas_sql})")
 
 
 def inserir_linhas(conexao: sqlite3.Connection, nome_tabela: str, colunas: list[str], linhas: list[dict]) -> None:
@@ -88,8 +91,18 @@ def inserir_linhas(conexao: sqlite3.Connection, nome_tabela: str, colunas: list[
     VALORES direto (isso evita SQL injection, mesmo aqui sendo dados
     controlados).
     """
-    # TODO: implemente a inserção das linhas
-    raise NotImplementedError("Implemente inserir_linhas()")
+    placeholders = ", ".join(["?"] * len(colunas))
+    colunas_sql = ", ".join(colunas)
+
+    sql = f"INSERT INTO {nome_tabela} ({colunas_sql}) VALUES ({placeholders})"
+
+    for linha in linhas:
+        valores = []
+
+        for coluna in colunas:
+            valores.append(linha[coluna])
+
+        conexao.execute(sql, valores)
 
 
 def main() -> None:

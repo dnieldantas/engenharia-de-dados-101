@@ -88,6 +88,8 @@ def calcular_resumo_por_categoria(vendas: list[dict], produtos: list[dict]) -> l
         categorias[categoria]["valor_total"] += float(venda["valor_total"])
         categorias[categoria]["quantidade_vendida"] += int(venda["quantidade"])
 
+        categorias[categoria]["valor_total"] = round(categorias[categoria]["valor_total"], 2)
+
     return list(categorias.values())
 
 def calcular_vendas_por_mes(vendas: list[dict]) -> list[dict]:
@@ -105,6 +107,8 @@ def calcular_vendas_por_mes(vendas: list[dict]) -> list[dict]:
         
         meses[mes]["quantidade_vendas"] += 1
         meses[mes]["valor_total"] += float(venda["valor_total"])
+
+        meses[mes]["valor_total"] = round(meses[mes]["valor_total"], 2)
 
     return list(meses.values())
 
@@ -129,6 +133,8 @@ def calcular_top_clientes(vendas: list[dict], clientes: list[dict], top_n: int =
             }
         top_clientes[id_cliente]["valor_total"] += float(venda["valor_total"])
 
+        top_clientes[id_cliente]["valor_total"] = round(top_clientes[id_cliente]["valor_total"], 2)
+
     top_clientes = list(top_clientes.values())
     top_clientes.sort(key=lambda cliente: cliente["valor_total"], reverse=True)
 
@@ -147,6 +153,8 @@ def calcular_resumo_geral(vendas: list[dict]) -> list[dict]:
         ticket_medio = round(valor_total_geral / total_vendas, 2)
     else:
         ticket_medio = 0.0
+
+    valor_total_geral = round(valor_total_geral, 2)
 
     return [{
         "total_vendas": total_vendas,
