@@ -90,11 +90,6 @@ def calcular_resumo_por_categoria(vendas: list[dict], produtos: list[dict]) -> l
 
     return list(categorias.values())
 
-
-    # TODO: implemente
-    raise NotImplementedError("Implemente calcular_resumo_por_categoria()")
-
-
 def calcular_vendas_por_mes(vendas: list[dict]) -> list[dict]:
     """Uma linha por mês (AAAA-MM): quantidade_vendas e valor_total somados."""
     meses = {}
@@ -112,10 +107,6 @@ def calcular_vendas_por_mes(vendas: list[dict]) -> list[dict]:
         meses[mes]["valor_total"] += float(venda["valor_total"])
 
     return list(meses.values())
-
-    # TODO: implemente
-    raise NotImplementedError("Implemente calcular_vendas_por_mes()")
-
 
 def calcular_top_clientes(vendas: list[dict], clientes: list[dict], top_n: int = 10) -> list[dict]:
     """Os top_n clientes que mais gastaram, ordenados do maior para o menor."""
@@ -143,10 +134,6 @@ def calcular_top_clientes(vendas: list[dict], clientes: list[dict], top_n: int =
 
     return top_clientes[:top_n]
 
-    # TODO: implemente
-    raise NotImplementedError("Implemente calcular_top_clientes()")
-
-
 def calcular_resumo_geral(vendas: list[dict]) -> list[dict]:
     """Uma única linha: total_vendas, valor_total_geral, ticket_medio."""
 
@@ -166,10 +153,6 @@ def calcular_resumo_geral(vendas: list[dict]) -> list[dict]:
         "valor_total_geral": valor_total_geral,
         "ticket_medio": ticket_medio
     }]
-
-    # TODO: implemente
-    raise NotImplementedError("Implemente calcular_resumo_geral()")
-
 
 def main() -> None:
     vendas = ler_csv(SILVER_SAIDA / "vendas_silver.csv")
