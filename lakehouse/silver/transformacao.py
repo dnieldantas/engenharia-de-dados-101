@@ -56,6 +56,7 @@ para o filtro de integridade referencial.
 
 import csv
 from pathlib import Path
+from datetime import datetime
 
 LAKEHOUSE = Path(__file__).parent.parent
 BRONZE_SAIDA = LAKEHOUSE / "bronze" / "saida"
@@ -112,7 +113,33 @@ def limpar_produtos(bronze: list[dict]) -> list[dict]:
     """
     Aplica as regras de limpeza de produtos descritas no topo do arquivo.
     """
-    
+    produtos = {}
+
+    for produto in bronze:
+        id_produto = int(produto["id_produto"])
+
+        preco = float(produto["preco"].replace(",", "."))
+
+        categoria = produto["categoria"].strip().capitalize()
+        if categoria not in CATEGORIAS_VALIDAS:
+            continue
+        
+        ativo = produto["ativo"].strip().lower()
+        if ativo == "1" or ativo == "sim":
+            ativo = 1
+        else:
+            ativo = 0
+
+        produto["id_produto"] = id_produto
+        produto["preco"] = preco
+        produto["categoria"] = categoria
+        produto["ativo"] = ativo
+
+        if id_produto not in produtos:
+            produtos[id_produto] = produto
+
+    return list(produtos.values())
+        
     # TODO: implemente a limpeza de produtos
     raise NotImplementedError("Implemente limpar_produtos()")
 
@@ -123,6 +150,47 @@ def limpar_vendas(bronze: list[dict], ids_clientes_validos: set[int], ids_produt
     incluindo o filtro de integridade referencial contra clientes/produtos
     já limpos.
     """
+    vendas = {}
+    for venda in bronze:
+        id_venda = int(venda["id_venda"])
+        id_cliente = int(venda["id_cliente"])
+        id_produto = int(venda["id_produto"])
+
+        data_venda = venda["data_venda"].strip()
+        if "/" in data_venda:
+            data_venda = datetime.strptime(data_venda, "%d/%m/%Y").strftime("%Y-%m-%d")
+
+        quantidade = venda["quantidade"].strip()
+        if not quantidade:
+            continue
+
+        quantidade = int(quantidade)
+
+        if quantidade <= 0:
+            continue
+        
+        valor_total = venda["valor_total"].strip()
+        if not valor_total:
+            continue
+        
+        valor_total = float(valor_total.replace(",","."))
+
+        if id_cliente not in ids_clientes_validos or id_produto not in ids_produtos_validos:
+            continue
+
+        venda["id_venda"] = id_venda
+        venda["id_cliente"] = id_cliente
+        venda["id_produto"] = id_produto
+        venda["data_venda"] = data_venda
+        venda["quantidade"] = quantidade
+        venda["valor_total"] = valor_total
+
+        if id_venda not in vendas:
+            vendas[id_venda] = venda
+
+    return list(vendas.values())
+
+
     # TODO: implemente a limpeza de vendas
     raise NotImplementedError("Implemente limpar_vendas()")
 
