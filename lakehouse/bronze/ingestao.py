@@ -54,6 +54,14 @@ def ler_vendas_csv() -> list[dict]:
 
     Dica: use csv.DictReader.
     """
+    vendas = []
+    with open(LANDING / "vendas.csv", "r", encoding="utf-8") as arquivo:
+        leitura = csv.DictReader(arquivo)
+        for linha in leitura:
+            vendas.append(dict(linha))
+
+    return vendas
+
     # TODO: implemente a leitura do arquivo lakehouse/landing/vendas.csv
     raise NotImplementedError("Implemente ler_vendas_csv()")
 
@@ -68,6 +76,10 @@ def ler_clientes_json() -> list[dict]:
     Dica: use json.load(). Repare que nem todo registro tem as mesmas
     chaves -- isso é esperado na bronze.
     """
+    with open(LANDING / "clientes.json", "r", encoding="utf-8") as arquivo:
+        clientes = json.load(arquivo)
+    return clientes
+
     # TODO: implemente a leitura do arquivo lakehouse/landing/clientes.json
     raise NotImplementedError("Implemente ler_clientes_json()")
 
@@ -91,6 +103,33 @@ def ler_produtos_txt() -> list[dict]:
     o próprio arquivo, use .strip() para remover a quebra de linha e
     .split("|") para separar os campos.
     """
+    produtos = []
+
+    with open(LANDING / "produtos.txt", "r", encoding="utf-8") as arquivo:
+        cabecalho = None
+        for linha in arquivo:
+            linha = linha.strip()
+
+            if not linha:
+                continue
+            
+            if linha[0] == "#":
+                continue
+
+            if cabecalho == None:
+                cabecalho = linha.split("|")
+                continue
+
+            valores = linha.split("|")
+            produto = {}
+
+            for i in range(len(cabecalho)):
+                produto[cabecalho[i]] = valores[i]
+
+            produtos.append(produto)
+
+    return produtos
+            
     # TODO: implemente a leitura do arquivo lakehouse/landing/produtos.txt
     raise NotImplementedError("Implemente ler_produtos_txt()")
 
